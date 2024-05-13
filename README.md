@@ -1,7 +1,7 @@
 # Aviation stock market predictor
 
 ## Goal
-The goal of this project is to develop a model that could predict the evolution of stock prices in the aviation sector based on sentiment analysis and the generation of descriptors on article titles.
+The goal of this project is to develop a model that could predict the evolution of stock prices in the aviation sector based on sentiment analysis and generation of descriptors on article titles.
 ## Methodology
 ### 1 - API 
 J'ai fait la demande pour un accès API à l'AFP, à voir si on va nous dire oui
