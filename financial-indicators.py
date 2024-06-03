@@ -14,7 +14,7 @@ for company in companies:
     ts = td.time_series(
         symbol="AAPL",
         interval="1day",
-        outputsize=365,
+        outputsize=3000,
         timezone="America/New_York",
     )
 
