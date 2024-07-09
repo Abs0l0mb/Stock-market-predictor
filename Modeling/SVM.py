@@ -17,7 +17,6 @@ data['target'] = (data['close'].shift(1) > data['close']).astype(int)
 X = data.drop(columns=['datetime', 'target'])
 y = data['target']
 
-# Standardize the features
 scaler = StandardScaler()
 X = scaler.fit_transform(X)
 
