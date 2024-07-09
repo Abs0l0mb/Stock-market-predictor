@@ -1,0 +1,5 @@
+Découverte Huggingface et interfacage python
+Modification csv
+Initiation au scraping
+Installation Pytorch
+Installation CUDA
