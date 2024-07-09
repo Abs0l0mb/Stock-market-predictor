@@ -1,11 +1,9 @@
 from twelvedata import TDClient
-import matplotlib.pyplot as plt
-import datetime
 import time 
 import csv
 
 
-companies = ['AAPL', 'AMZN', 'FB', 'GOOGL', 'MSFT']
+companies = ['AAPL']
 data = object
 
 for company in companies:
@@ -15,7 +13,7 @@ for company in companies:
         symbol="AAPL",
         interval="1day",
         outputsize=3000,
-        timezone="America/New_York",
+        timezone="Europe/Paris",
     )
 
     data = ts.with_bbands().with_ema().with_macd().with_rsi().with_sma().with_stoch().as_json()
@@ -35,23 +33,5 @@ for company in companies:
         # Write the data
         for row in data:
             writer.writerow(row)
-
+    print(company, ' processed')
     time.sleep(61)
-
-#print(data)
-
-#dates = [datetime.datetime.strptime(record['datetime'], '%Y-%m-%d') for record in data]
-#closing_prices = [float(record['close']) for record in data]
-
-# Plotting
-#plt.figure(figsize=(10, 5))
-#plt.plot(dates, closing_prices, marker='o', linestyle='-', color='b')
-#plt.xlabel('Date')
-#plt.ylabel('Closing Price')
-#plt.title('Closing Prices Over Time')
-#plt.grid(True)
-#plt.xticks(rotation=45)
-#plt.tight_layout()
-
-# Show the plot.
-#plt.show()

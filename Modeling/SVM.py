@@ -1,13 +1,18 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, accuracy_score
 from sklearn.svm import SVC
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import classification_report, accuracy_score
 
-data = pd.read_csv('./AAPL.csv')
+label_encoder_category = LabelEncoder()
+label_encoder_sentiment = LabelEncoder()
+
+data = pd.read_csv('./AAPL_with_articles.csv')
+data = data.dropna()
+data['dominant_category'] = label_encoder_category.fit_transform(data['dominant_category'].astype(str))
+data['dominant_sentiment'] = label_encoder_sentiment.fit_transform(data['dominant_sentiment'].astype(str))
 data['target'] = (data['close'].shift(1) > data['close']).astype(int)
-data = data.drop(index=0).reset_index(drop=True)
-
-#print(data)
+#data = data.drop(index=0).reset_index(drop=True)
 
 X = data.drop(columns=['datetime', 'target'])
 y = data['target']
