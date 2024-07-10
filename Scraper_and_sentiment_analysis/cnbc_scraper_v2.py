@@ -70,15 +70,15 @@ class CNBCScraper:
         # Accepter les cookies si nécessaire
         self.accept_cookies(driver)
 
-        # Scroll to load more articles
-        for scroll_count in range(100):  # Augmenté le nombre de scrolls pour charger plus d'articles
+        # Scroll pour charger plus d'articles
+        for scroll_count in range(100):  # Augmenter le nombre de scrolls pour charger plus d'articles
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             print(f"Scrolled {scroll_count + 1} times")
             time.sleep(2)
 
         soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-        # Save the page source for debugging
+        # Enregistrer la page source pour une analyse de debugging en cas d'erreur
         with open("debug_page_source.html", "w", encoding="utf-8") as f:
             f.write(driver.page_source)
         
@@ -139,14 +139,9 @@ def run_scraper(search_terms):
     if not scraper.articles:
         print('No articles found for the given search terms.')
         return
+    file_name = search_terms + '_scraping'
+    scraper.write_to_csv(file_name)
 
-    save_to_csv = input('Do you want to save the data to a CSV file? (yes/no): ').strip().lower()
-    if save_to_csv == 'yes':
-        file_name = input('Enter the CSV file name: ').strip()
-        scraper.write_to_csv(file_name)
-    else:
-        print('Data not saved.')
-
-# Utilisation
-terms = ["Apple"]
+# Choix du terme utilisé pour la recherche sur le site
+terms = ["apple"]
 run_scraper(terms)

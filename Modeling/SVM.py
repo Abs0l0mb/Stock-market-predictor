@@ -7,7 +7,7 @@ from sklearn.metrics import classification_report, accuracy_score
 label_encoder_category = LabelEncoder()
 label_encoder_sentiment = LabelEncoder()
 
-data = pd.read_csv('./AAPL_with_articles.csv')
+data = pd.read_csv('C:/Users/yannp/Desktop/rcp209/projet/projet-RCP209/Modeling/AAPL_with_articles.csv')
 data = data.dropna()
 data['dominant_category'] = label_encoder_category.fit_transform(data['dominant_category'].astype(str))
 data['dominant_sentiment'] = label_encoder_sentiment.fit_transform(data['dominant_sentiment'].astype(str))
