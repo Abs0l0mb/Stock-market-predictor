@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.metrics import classification_report, accuracy_score
 
 label_encoder_category = LabelEncoder()
@@ -17,9 +17,12 @@ data['target'] = (data['close'].shift(1) > data['close']).astype(int)
 X = data.drop(columns=['datetime', 'target'])
 y = data['target']
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+scaler = StandardScaler()
+X = scaler.fit_transform(X)
 
-svm_model = SVC(kernel='linear')
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+svm_model = SVC(kernel='poly', verbose=True)
 svm_model.fit(X_train, y_train)
 
 y_pred = svm_model.predict(X_test)

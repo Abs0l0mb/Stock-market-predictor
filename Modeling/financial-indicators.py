@@ -20,18 +20,15 @@ for company in companies:
 
     csv_file = company + '.csv'
 
-    # Get the keys from the first dictionary (to use as headers)
     headers = data[0].keys()
 
-    # Open the file in write mode
     with open(csv_file, 'w', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=headers)
-        
-        # Write the header
         writer.writeheader()
-        
-        # Write the data
         for row in data:
             writer.writerow(row)
+
     print(company, ' processed')
-    time.sleep(61)
+
+    # Uncomment the following line if you want to retrieve multiple companies data
+    #time.sleep(61)
