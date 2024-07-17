@@ -1,63 +1,59 @@
-# Aviation stock market predictor
+# Stock market predictor
 
 ## Goal
 
-The goal of this project is to develop a model that could predict the evolution of stock prices in the aviation sector based on sentiment analysis and generation of descriptors on article titles.
+The goal of this project is to develop a model that could predict the evolution of stock prices based on sentiment analysis of articles and financial data.
 
 ## Methodology
 
-### 1 - API
+### Input (Dataset)
 
-J'ai fait la demande pour un accès API à l'AFP, à voir si on va nous dire oui
+To create the dataset, we need to scrape articles from CNBC and analyze their sentiment (positive, neutral, negative). We also add the category provided by CNBC to the data.
+We combine those informations with financial data extracted from twelveAPI (https://github.com/twelvedata/twelvedata-python).
 
-Pour les informations financières : https://twelvedata.com/
-Bibliothèque officielle pour python : https://github.com/twelvedata/twelvedata-python
+The resulting dataset should look like this :
 
-### 2 - Pipeline
+![image](https://github.com/user-attachments/assets/2cd0da09-637c-4ab9-a3d8-d64cc1966577)
 
-## Sentiment analysis
+### Models
 
-For the sentiment analysis part, we can use "twitter-roberta-base-sentiment-latest", which gives us 3 classes (positive, neutral, negative) between 0 and 1.
+Various models have been tested. Though LSTM could have been an ideal candidate, the data formatting that it necessitates made us use simpler models at first, such as SVM and random forests.
+The implementation of a LSTM have been tested on financial data only. Since we want to infer only on days that have at least an article (category + sentiment) associated to it, the dataset would have been quite complex for it to be transformed into a time series.
 
-## Additionnal features
+For random forests the number fo predictor have been determined by graphing the accuracy and precision depending on the number of predictors.
 
-Then, we will have to think about the additionnal informations that we have to put in the descriptor that could be meaningful and could generate correlation with stock prices (eg. is the article talking about technical things, political things, maybe the subdomain, what's the company size, etc.) Those informations can be expressed as floats in [-1, 1] or [0, 1] or even as integer values with 2 or 3 possibilities.
+![image](https://github.com/user-attachments/assets/bb2060b4-fbb7-46c9-ab45-5d50b106e042)
 
-## Financial indicators
+![image](https://github.com/user-attachments/assets/a27374d6-7d5d-4d4e-a786-e9c956b8ec03)
 
-In addition to the sentiment and features, we can pass to the network some financial indicators :
+We did not dive deep into the paramters of the SVM. We only tested commonly used kernels and compared accuracy and precision.
 
-- price evolution on the previous day, week, month and year
-- MA on the same time frames
-- MACD on the same time frames
-- RSI on the same time frames
-- Volume
+### Output
 
-Credit system : https://support.twelvedata.com/en/articles/5609168-introduction-to-twelve-data
+The models gives us, for a given day d, if wether the closing price of day d+1 will be higher or lower than day d.
 
-## Behvior biases
+## Results
 
-We could also add things like risk (do i want the network to take risks or not) and things exterior to the article to make a prediction that could affect its behavior.
+The results obtained on Apple are promising. Though with only inputting financial data into an LSTM, we get a 50% accuracy, the results are more precise when using sentiment analysis with SVM and random forests.
 
-## Resulting prediction
+Results for random forests
 
-The resulting vector is then fed into a neural network that will output a vector containing informations such as :
+![image](https://github.com/user-attachments/assets/d41c4761-53c4-4948-bdd3-9939fbd3eb5f)
 
-- short/long (0/1)
-- duration (in days)
-- eventual stop loss threshold
-- eventual take profit threshold
+Results for SVM
 
-This prediction can then be exploited on the market. The last step is to make a simple script that takes those informations to make a trade and put it on the market with an API.
+![image](https://github.com/user-attachments/assets/c771f1c4-e892-49a5-8e19-832bd907793c)
 
-### 3 - Method
+As we can see, the gain of precision is not drastic, but it is promising in the sense that articles are relevant for stock prediction to an extent.
 
-First we select a fixed number of companies
+## Perspectives
 
-We then extract all the articles that talks about said companies for the day. For each articles, a combination of sentiment analysis and feature extraction are made.
+Further adjustements can be made. 
 
-Then, we concatenate all these vectors to obtain a single vector of sentiment and features per company for the day.
+First, the tests describes above have been conducted on Apple data. Apple is a verys table company, that is not subject to volatility. Maybe choosing a smaller company that is heavily dependent on its performance (such as astrazeneca during covid) could be more efficient.
 
-We then feed this vector along with the financial informations of the day, week, month and year of the company into a company specific model (that has been trained with only the data of that company).
+Also, the implementation of an LSTM could better capture the long term dependencies of stock variation and sentiment
 
-The output is then produced and can be exploited.
+Another improvement could be to scrape data from multiple information websites to get more articles, and so have a more nuanced approach concerning sentiment analysis.
+
+For example, we could calculate the proportion of articles speaking negatively about a company, and use this proportion instead of just rounding to the most present sentiment.
